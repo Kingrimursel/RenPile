@@ -27,18 +27,27 @@ parser = ArgumentParser(description="Rename-Pile Help:",
 
 informational_arguments = parser.add_argument_group('Informational arguments')
 informational_arguments.add_argument('-h', '--help', action='help',
-        default=SUPPRESS, help="Show this message and exit.")
+                                     default=SUPPRESS,
+                                     help="Show this message and exit.")
 informational_arguments.add_argument('-v', '--version', action='version',
-        version='%(prog)s 1.0', help="Show the programs version and exit.")
+                                     version='%(prog)s 1.0',
+                                     help="Show the programs version and exit."
+                                     )
 required_arguments = parser.add_argument_group('Required arguments')
 required_arguments.add_argument("-dir", "--directory", dest="directory",
-        SWQWhelp="Source directory.", required=True, metavar="\b")
+                                help="Source directory.",
+                                required=True, metavar="\b")
 required_arguments.add_argument("-r", "--root", dest="root",
-        help="New root word.", required=True, metavar="\b")
+                                help="New root word.", required=True,
+                                metavar="\b")
 
 optional_arguments = parser.add_argument_group('Optional arguments')
-optional_arguments.add_argument("-ft", "--fromtype", dest="fromtype", help="Just rename files from this type. Use \"dir\" or \"directory\" to just rename directories.", metavar="\b")
-optional_arguments.add_argument("-tt", "--totype", dest="totype", help="Convert to type.", metavar="\b")
+optional_arguments.add_argument("-ft", "--fromtype", dest="fromtype",
+                                help="Just rename files from this type. Use "
+                                "\"dir\" or \"directory\" to just rename "
+                                "directories.", metavar="\b")
+optional_arguments.add_argument("-tt", "--totype", dest="totype",
+                                help="Convert to type.", metavar="\b")
 
 args = parser.parse_args()
 
@@ -67,29 +76,36 @@ if is_directory:
                     dirfiles.append(join(args.directory, f))
     # If fromtype is not set
     else:
-        # Just take all files in the source direcotry and put them into the array
-        dirfiles = [f for f in listdir(args.directory) if isfile(join(args.directory, f))]
+        # Take all files in the source direcotry and put them into the array
+        dirfiles = [f for f in listdir(args.directory)
+                    if isfile(join(args.directory, f))]
     i = 0
     # Take one file after the other from the array.
     for file in dirfiles:
         #  Check if the type of the files should be changed.
         if args.totype is not None:
-            # If 'fromtype' is set and equal to 'directory', exit because you can't change a directories type.
+            # If 'fromtype' is set and equal to 'directory', exit because you
+            # can't change a directories type.
             if(args.fromtype == "dir" or args.fromtype == "directory"):
                 print(colored('Can\'t change the type of a directory', 'red'))
                 exit(2)
             else:
-                # If 'totype' is set and not equal to 'directory', safe the new file extension.
+                # If 'totype' is set and not equal to 'directory', safe the new
+                # file extension.
                 new_extension = "." + args.totype
         else:
             # If 'totype' is not set, every file should keep it's extension.
             new_extension = os.path.splitext(file)[1]
         # Check if the new name exists, if not rename the file.
-        if not os.path.exists(os.path.join(args.directory, args.root + str(i) + new_extension)):
-            os.rename(os.path.join(args.directory, file), os.path.join(args.directory, args.root + str(i) + new_extension))
+        if not os.path.exists(os.path.join(args.directory, args.root + str(i)
+                                           + new_extension)):
+            os.rename(os.path.join(args.directory, file),
+                      os.path.join(args.directory, args.root + str(i)
+                                   + new_extension))
         # If the new name does exist, exit.
         else:
-            print(colored('Name ' + args.root + str(i) + ' already exists.', 'yellow'))
+            print(colored('Name ' + args.root + str(i) + ' already exists.',
+                          'yellow'))
             exit(2)
         i += 1
     # If everything went right and more than 0 items were converted, print.
