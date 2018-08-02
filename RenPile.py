@@ -1,12 +1,17 @@
-# This program is written in python3.6. It is able to rename multiple elements at once.
-# Given a root word, it renames the queued elements to "word root" + an integer, starting with 0 and counting up from there.
-# The user gives the program a source-directory, where the program will operate.
-# It is able to either rename files by a specific type or just directories, as well as all children of the given parent directory.
-# The program can also change the type of a file.
+"""
+This program is written in python3.6. It is able to rename multiple elements
+at once.
+Given a root word, it renames the queued elements to "word root" + an integer,
+starting with 0 and counting up from there.
+The user gives the program a source-directory, where the program will operate.
+It is able to either rename files by a specific type or just directories, as
+well as all children of the given parent directory.
+The program can also change the type of a file.
 
-# For more informations open a shell, navigate to the directory where this file is stored and type:'python3* RenPile.py -h'
-# *or whatever python interpreter you are using.
-
+For more informations open a shell, navigate to the directory where this file
+is stored and type:'python3* RenPile.py -h'
+*or whatever python interpreter you are using.
+"""
 from argparse import ArgumentParser
 from argparse import SUPPRESS
 import os
@@ -21,13 +26,15 @@ parser = ArgumentParser(description="Rename-Pile Help:",
                         add_help=False)
 
 informational_arguments = parser.add_argument_group('Informational arguments')
-informational_arguments.add_argument('-h', '--help', action='help', default=SUPPRESS, help="Show this message and exit.")
-informational_arguments.add_argument('-v', '--version', action='version', version='%(prog)s 1.0', help="Show the programs version number and exit.")
-
+informational_arguments.add_argument('-h', '--help', action='help',
+        default=SUPPRESS, help="Show this message and exit.")
+informational_arguments.add_argument('-v', '--version', action='version',
+        version='%(prog)s 1.0', help="Show the programs version and exit.")
 required_arguments = parser.add_argument_group('Required arguments')
-required_arguments.add_argument("-dir", "--directory", dest="directory", help="Source directory.", required=True, metavar="\b")
+required_arguments.add_argument("-dir", "--directory", dest="directory",
+        SWQWhelp="Source directory.", required=True, metavar="\b")
 required_arguments.add_argument("-r", "--root", dest="root",
-                    help="New root word.", required=True, metavar="\b")
+        help="New root word.", required=True, metavar="\b")
 
 optional_arguments = parser.add_argument_group('Optional arguments')
 optional_arguments.add_argument("-ft", "--fromtype", dest="fromtype", help="Just rename files from this type. Use \"dir\" or \"directory\" to just rename directories.", metavar="\b")
@@ -43,18 +50,18 @@ if is_directory:
     # The array that will contain the files that should be renamed.
     dirfiles = []
     # If 'fromtype' was set, just queue elements by this type.
-    if(args.fromtype != None):
+    if args.fromtype is not None:
         # Check if fromtype is 'directory'
         if (args.fromtype == "dir" or args.fromtype == "directory"):
             # Add elements that should be renamed to the array.
             dirfiles = [x[0] for x in os.walk(args.directory)]
             del dirfiles[0]
         # If 'fromtype' is set but not as 'dir', do the following.
-        else:   
+        else:
             for f in listdir(args.directory):
                 # Safe the old file extension of every file in the directory
                 old_extension = os.path.splitext(join(args.directory, f))[1]
-                # Check if the old file extension is equal to the current file, if yes...
+                # Check if the old file extension is equal to the current file.
                 if(old_extension == "." + args.fromtype):
                     # ... ad to the array.
                     dirfiles.append(join(args.directory, f))
@@ -66,7 +73,7 @@ if is_directory:
     # Take one file after the other from the array.
     for file in dirfiles:
         #  Check if the type of the files should be changed.
-        if(args.totype != None):
+        if args.totype is not None:
             # If 'fromtype' is set and equal to 'directory', exit because you can't change a directories type.
             if(args.fromtype == "dir" or args.fromtype == "directory"):
                 print(colored('Can\'t change the type of a directory', 'red'))
@@ -86,8 +93,8 @@ if is_directory:
             exit(2)
         i += 1
     # If everything went right and more than 0 items were converted, print.
-    if(len(dirfiles) > 0):  
-        print (colored('Successfully converted', 'green'))
+    if(len(dirfiles) > 0):
+        print(colored('Successfully converted', 'green'))
     # If nothing was converted, print.
     else:
         print(colored('No items found, so nothing converted.', 'red'))
@@ -95,4 +102,3 @@ if is_directory:
 else:
     print(colored('Source directory doesn\'t exist', 'red'))
     exit(2)
-
